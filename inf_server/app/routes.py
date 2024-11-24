@@ -10,20 +10,15 @@ import os
 def ask_abadi():
 
     f = request.files['file']
-    print("Got file")
 
     texts = request.form.get('texts')
-    print("Got texts:", texts)
 
     pathname = f"img_file{os.getpid()}.jpg"
     f.save(pathname)
 
-    print("Before inference")
-    out_dic = handle_img(pathname, texts)
-    # out_dic = {"result": "success"}  # Placeholder
-    print("After inference")
+    inf_info = handle_img(pathname, texts)
 
-    return jsonify(out_dic), 200
+    return jsonify(inf_info), 200
 
 
 @app.route('/', methods=['GET'])

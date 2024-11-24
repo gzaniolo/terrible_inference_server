@@ -9,6 +9,7 @@ sys.path.append('/mmdetection')
 
 from mmdet.apis import DetInferencer
 from mmdet.evaluation import get_classes
+from mmdet.models.detectors.glip import run_ner
 
 import os
 
@@ -111,6 +112,15 @@ def handle_img(img_path, texts):
     call_args['texts'] = texts
 
     out_dic = inferencer(**call_args)
+    # Seems flakey and possibly wrong. Double check...
+    tokens_positive, noun_phrases = run_ner(texts)
 
-    print("shitma balls")
-    return out_dic
+    # # # Many print statements re-activate if useful
+    # print("CLASSES AAAAAAAAAAAAA")
+    # print(noun_phrases)
+    # print("BBBBBB")
+    # print(texts)
+    # print("AAAAAAAAAAA")
+
+    # return out_dic
+    return out_dic, noun_phrases
