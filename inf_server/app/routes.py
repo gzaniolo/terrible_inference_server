@@ -26,6 +26,6 @@ def ask_abadi():
     return jsonify(out_dic), 200
 
 
-@app.route('/ret', methods=['GET'])
+@app.route('/', methods=['GET'])
 def ret():
-    return '', 200
+    return 'ping', 200
