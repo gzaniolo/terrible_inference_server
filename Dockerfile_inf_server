@@ -1,0 +1,84 @@
+
+
+ARG PYTORCH="1.9.0"
+ARG CUDA="11.1"
+ARG CUDNN="8"
+
+FROM pytorch/pytorch:${PYTORCH}-cuda${CUDA}-cudnn${CUDNN}-devel
+
+ENV TORCH_CUDA_ARCH_LIST="6.0 6.1 7.0 7.5 8.0 8.6+PTX" \
+    TORCH_NVCC_FLAGS="-Xfatbin -compress-all" \
+    CMAKE_PREFIX_PATH="$(dirname $(which conda))/../" \
+    FORCE_CUDA="1"
+
+# Avoid Public GPG key error
+# https://github.com/NVIDIA/nvidia-docker/issues/1631
+RUN rm /etc/apt/sources.list.d/cuda.list \
+    && rm /etc/apt/sources.list.d/nvidia-ml.list \
+    && apt-key del 7fa2af80 \
+    && apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub \
+    && apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
+
+# (Optional, use Mirror to speed up downloads)
+# RUN sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//http:\/\/mirrors.aliyun.com\/ubuntu\//g' /etc/apt/sources.list && \
+#    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+# Install the required packages
+RUN apt-get update \
+    && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6 wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install MMEngine and MMCV
+RUN pip install openmim transformers fairscale nltk && \
+    mim install "mmengine>=0.7.1" "mmcv==2.1.0"
+
+# Install MMDetection
+RUN conda clean --all \
+    && git clone https://github.com/open-mmlab/mmdetection.git /mmdetection \
+    && cd /mmdetection \
+    && pip install --no-cache-dir -e .
+
+WORKDIR /mmdetection
+
+RUN wget https://download.openmmlab.com/mmdetection/v3.0/grounding_dino/groundingdino_swint_ogc_mmdet-822d7e9d.pth
+
+COPY inf_server/import_nltk.py .
+
+RUN python3 import_nltk.py
+
+# Does not work becuase dockerfile doesn't run with gpu lol
+# RUN python demo/image_demo.py demo/demo.jpg configs/grounding_dino/grounding_dino_swin-t_pretrain_obj365_goldg_cap4m.py --weights groundingdino_swint_ogc_mmdet-822d7e9d.pth --texts 'bench . car .'
+
+
+
+# Step 2: Set the working directory
+WORKDIR /webserver
+
+# Step 3: Copy the current directory contents into the container
+COPY . .
+
+# Step 4: Install dependencies (including OpenCV dependencies)
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Step 5: Install the Python dependencies
+RUN pip install -r inf_server/requirements.txt
+
+# Step 6: Install Nginx
+RUN apt-get update && apt-get install -y nginx
+
+# Step 7: Remove the default Nginx configuration file
+RUN rm /etc/nginx/sites-enabled/default
+
+# Step 8: Copy the custom Nginx config file into the container
+COPY inf_server/nginx.conf /etc/nginx/sites-available/nginx.conf
+RUN ln -s /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled/
+
+# Step 9: Expose port 80 to the outside world
+EXPOSE 80
+
+# Step 10: Start Nginx and Gunicorn
+CMD service nginx start && gunicorn -c gunicorn.conf.py --workers 4 --bind 0.0.0.0:8000 myapp:app
