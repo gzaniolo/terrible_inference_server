@@ -100,8 +100,23 @@ if __name__ == "__main__":
 
     # desired
     # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-    # {'model': 'configs/grounding_dino/grounding_dino_swin-t_pretrain_obj365_goldg_cap4m.py', 'weights': 'groundingdino_swint_ogc_mmdet-822d7e9d.pth', 'device': 'cuda:0', 'palette': 'none'}
-    # {'inputs': 'demo/demo.jpg', 'out_dir': 'outputs', 'texts': 'bench . car .', 'pred_score_thr': 0.3, 'batch_size': 1, 'show': False, 'no_save_vis': False, 'no_save_pred': False, 'print_result': False, 'custom_entities': False, 'chunked_size': -1, 'tokens_positive': None}
+    # {'model': 'configs/grounding_dino/grounding_dino_swin-t_pretrain_obj365_goldg_cap4m.py', 
+    #  'weights': 'groundingdino_swint_ogc_mmdet-822d7e9d.pth', 
+    #  'device': 'cuda:0', 
+    #  'palette': 'none'}
+    # 
+    # {'inputs': 'demo/demo.jpg', 
+    #  'out_dir': 'outputs', 
+    #  'texts': 'bench . car .', 
+    #  'pred_score_thr': 0.3, 
+    #  'batch_size': 1, 
+    #  'show': False, 
+    #  'no_save_vis': False, 
+    #  'no_save_pred': False, 
+    #  'print_result': False, 
+    #  'custom_entities': False, 
+    #  'chunked_size': -1, 
+    #  'tokens_positive': None}
     # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     # mine:
 

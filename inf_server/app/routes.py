@@ -1,5 +1,5 @@
 from myapp import app
-from flask import request
+from flask import request, jsonify
 from app.inference import handle_img
 import os
 
@@ -10,13 +10,12 @@ import os
 def ask_abadi():
     
     f = request.files['file']
+    texts = request.json.get('texts')
 
     pathname = f"img_file{os.getpid()}.jpg"
 
     f.save(pathname)
     
+    out_dic = handle_img(pathname, texts)
 
-    if not handle_img(pathname):
-        return {"error": "shit"}, 400
-
-    return {"msg":"shitma balls"}, 200
+    return jsonify(out_dic), 200
