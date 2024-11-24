@@ -1,2 +1,4 @@
 *__pycache__*
 *~*
+*.jpg
+!inf_server/testimg.jpg

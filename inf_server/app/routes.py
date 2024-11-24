@@ -1,4 +1,5 @@
 from myapp import app
+from flask import request
 from app.inference import handle_img
 import os
 

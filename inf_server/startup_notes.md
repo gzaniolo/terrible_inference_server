@@ -42,3 +42,26 @@ demo run command
 ```
 python demo/image_demo.py demo/demo.jpg configs/grounding_dino/grounding_dino_swin-t_pretrain_obj365_goldg_cap4m.py --weights groundingdino_swint_ogc_mmdet-822d7e9d.pth --texts 'bench . car .'
 ```
+
+
+windows cd directory:
+C:\Users\ethanm\Documents\18500\Forget-Me-Not-Capstone\mmdetection\docker\inf_server
+wsl:
+/mnt/c/Users/ethanm/Documents/18500/Forget-Me-Not-Capstone/mmdetection/docker
+
+firewall commands:
+To find wsl ip just 'hostname -I' in the container...
+To find win ip 'ipconfig' and under 'Ethernet adapter Ethernet'
+Paste command into windows?
+```
+netsh interface portproxy add v4tov4 listenaddress='windows ip' listenport=4000 connectaddress='wsl ip' connectport=4000
+netsh interface portproxy add v4tov4 listenaddress=172.24.156.5 listenport=4000 connectaddress=172.22.139.165 connectport=4000
+```
+"and also had to modify some windows firewall stuff
+
+
+curl test command
+```
+curl -X POST -F "file=@path/to/your/image.jpg" http://localhost:5000/ask_abadi
+curl -X POST -F "file=@inf_server/testimg.jpg" http://172.22.139.165:4000/ask_abadi
+```

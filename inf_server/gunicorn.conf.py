@@ -17,7 +17,7 @@ def post_fork(server, worker):
 
     # print(f"worker!! {worker}")
     # print(type(worker))
-    print(vars(worker))
+    # print(vars(worker))
 
 
 # # Runs when a worker exits. Useful for cleanup.
