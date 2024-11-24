@@ -1,16 +1,16 @@
 import requests
-import json
 
-ip = '172.22.139.165'
-
-url = 'http://' + ip + ':4000/ask_abadi'
+ip = '172.24.156.5'
+url = f'http://{ip}:4000/ask_abadi'
 
 file_path = 'inf_server/testimg.jpg'
 
-texts_data = {"texts": "bench . car ."}
+texts_data = {"texts": "bench . car . person ."}
+# texts_data = {"texts": "$: coco"}
 
-files = {'file': open(file_path, 'rb')}  # 'rb' mode to read the file as binary
-data = {'texts': json.dumps(texts_data)}  # Convert the Python dictionary to a JSON string
+files = {'file': open(file_path, 'rb')}  # Open the file in binary mode
+
+data = {'texts': str(texts_data)}
 
 response = requests.post(url, files=files, data=data)
 
