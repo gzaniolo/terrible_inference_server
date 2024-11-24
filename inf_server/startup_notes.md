@@ -72,6 +72,7 @@ curl -X POST -F "file=@inf_server/testimg.jpg" http://172.24.156.5:4000/ask_abad
 New:
 ```
 curl -X POST -F "file=@inf_server/testimg.jpg" -H "Content-Type: multipart/form-data" -F "texts=bench . car ." http://172.22.139.165:4000/ask_abadi
+
 curl -X POST -F "file=@inf_server/testimg.jpg" -F "texts={\"texts\": \"bench . car .\"}" http://172.22.139.165:4000/ask_abadi
 
 ```

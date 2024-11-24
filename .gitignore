@@ -2,3 +2,4 @@
 *~*
 *.jpg
 !inf_server/testimg.jpg
+*outputs*

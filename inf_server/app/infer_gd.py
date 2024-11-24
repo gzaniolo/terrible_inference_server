@@ -13,9 +13,6 @@ from mmdet.evaluation import get_classes
 import os
 
 
-
-
-
 # Generate args in a way that is similar to the demo scripts; don't want to 
 #  accidentally mess up any defaults
 def parse_args(
@@ -84,11 +81,22 @@ def parse_args(
 # Don't actually use some of the call args when we call
 pathname = f"img_file{os.getpid()}.jpg"
 
+# # Stock config:
+# init_args, call_args = parse_args(
+#     inputs='../../mmdetection/demo/demo.jpg',
+#     model='../../mmdetection/configs/grounding_dino/grounding_dino_swin-t_pretrain_obj365_goldg_cap4m.py',
+#     weights='../../mmdetection/groundingdino_swint_ogc_mmdet-822d7e9d.pth',
+#     texts='bench . car .',
+#     no_save_pred=True,
+#     no_save_vis=True)
+# Coco config:
 init_args, call_args = parse_args(
     inputs=pathname,
-    model='../../mmdetection/configs/grounding_dino/grounding_dino_swin-t_pretrain_obj365_goldg_cap4m.py',
-    weights='../../mmdetection/groundingdino_swint_ogc_mmdet-822d7e9d.pth',
-    texts='bench . car .',
+    model='../../mmdetection/configs/mm_grounding_dino/grounding_dino_swin-t_pretrain_obj365.py',
+    weights='../../mmdetection/grounding_dino_swin-t_pretrain_obj365_goldg_grit9m_v3det_20231204_095047-b448804b.pth',
+    texts='$: coco',
+    # no_save_pred=False,
+    # no_save_vis=False)
     no_save_pred=True,
     no_save_vis=True)
 
@@ -102,7 +110,7 @@ def handle_img(img_path, texts):
     global call_args
     call_args['texts'] = texts
 
-    out_dic = inference(**call_args)
+    out_dic = inferencer(**call_args)
 
     print("shitma balls")
     return out_dic
